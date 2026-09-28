@@ -1,5 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
-import { createTask, type NewTaskInput, type Task, toggleTaskCompletion } from "entities/task";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createTask,
+  useGetTasksQuery,
+  type NewTaskInput,
+  type Task,
+  toggleTaskCompletion,
+} from "entities/task";
 
 export type TaskFilter = "all" | "incomplete" | "completed";
 
@@ -14,9 +20,18 @@ export const TASK_FILTERS: readonly TaskFilterOption[] = [
   { value: "completed", label: "Выполненные" },
 ];
 
-export function useTasks(initialTasks: readonly Task[] = []) {
-  const [tasks, setTasks] = useState<Task[]>(() => [...initialTasks]);
+export function useTasks() {
+  const { data: remoteTasks, isLoading, isError, refetch } = useGetTasksQuery();
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const initialized = useRef(false);
   const [filter, setFilter] = useState<TaskFilter>("all");
+
+  useEffect(() => {
+    if (remoteTasks === undefined || initialized.current) return;
+
+    initialized.current = true;
+    setTasks((current) => [...current, ...remoteTasks]);
+  }, [remoteTasks]);
 
   const visibleTasks = useMemo(
     () =>
@@ -36,7 +51,8 @@ export function useTasks(initialTasks: readonly Task[] = []) {
   );
 
   const addTask = useCallback((input: NewTaskInput) => {
-    setTasks((current) => [createTask(input), ...current]);
+    const task = createTask(input);
+    setTasks((current) => [task, ...current]);
   }, []);
 
   const toggleTask = useCallback((id: Task["id"]) => {
@@ -57,6 +73,9 @@ export function useTasks(initialTasks: readonly Task[] = []) {
 
   return {
     tasks: visibleTasks,
+    isLoading,
+    isError,
+    refetch,
     counts,
     filter,
     setFilter,
