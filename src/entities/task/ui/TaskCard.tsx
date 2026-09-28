@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { formatCreatedAt, isTaskDone, type Task } from "../model/types";
 import styles from "./TaskCard.module.scss";
 
@@ -7,7 +8,7 @@ interface TaskCardProps {
   onRemove: (id: Task["id"]) => void;
 }
 
-export function TaskCard({ task, onToggle, onRemove }: TaskCardProps) {
+export const TaskCard = memo(function TaskCard({ task, onToggle, onRemove }: TaskCardProps) {
   const done = isTaskDone(task);
 
   return (
@@ -37,4 +38,4 @@ export function TaskCard({ task, onToggle, onRemove }: TaskCardProps) {
       </div>
     </li>
   );
-}
+});
