@@ -1,0 +1,20 @@
+.fields {
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+}
+
+.previous {
+  margin: 0;
+  overflow-wrap: anywhere;
+
+  output {
+    font-weight: 600;
+    white-space: pre-wrap;
+  }
+}
+
+.note {
+  margin: 0;
+  color: var(--text-muted);
+}
