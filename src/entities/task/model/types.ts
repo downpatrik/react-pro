@@ -1,9 +1,10 @@
 export interface Task {
-  id: string;
+  id: number;
+  userId?: number;
   title: string;
   description?: string;
   completed: boolean;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface NewTaskInput {
@@ -11,11 +12,14 @@ export interface NewTaskInput {
   description?: string;
 }
 
+// Локальные задачи используют отрицательные ID, чтобы не пересекаться с положительными ID сервера.
+let nextLocalId = -1;
+
 export function createTask({ title, description }: NewTaskInput): Task {
   const trimmedDescription = description?.trim();
 
   return {
-    id: crypto.randomUUID(),
+    id: nextLocalId--,
     title: title.trim(),
     ...(trimmedDescription ? { description: trimmedDescription } : {}),
     completed: false,

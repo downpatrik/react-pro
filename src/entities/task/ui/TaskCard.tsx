@@ -26,9 +26,11 @@ export const TaskCard = memo(function TaskCard({ task, onToggle, onRemove }: Tas
       {task.description ? <p className={styles.description}>{task.description}</p> : null}
 
       <div className={styles.meta}>
-        <time className={styles.date} dateTime={task.createdAt}>
-          {formatCreatedAt(task.createdAt)}
-        </time>
+        {task.createdAt ? (
+          <time className={styles.date} dateTime={task.createdAt}>
+            {formatCreatedAt(task.createdAt)}
+          </time>
+        ) : null}
         <button type="button" className={styles.action} onClick={() => onToggle(task.id)}>
           {done ? "Вернуть в работу" : "Отметить выполненной"}
         </button>

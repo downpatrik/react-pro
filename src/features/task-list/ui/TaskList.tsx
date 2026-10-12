@@ -4,6 +4,9 @@ import { TASK_FILTERS, type TaskFilter } from "../model/useTasks";
 import styles from "./TaskList.module.scss";
 
 interface TaskListProps {
+  isLoading: boolean;
+  isError: boolean;
+  onRetry: () => void;
   tasks: readonly Task[];
   filter: TaskFilter;
   counts: Record<TaskFilter, number>;
@@ -13,6 +16,9 @@ interface TaskListProps {
 }
 
 export function TaskList({
+  isLoading,
+  isError,
+  onRetry,
   tasks,
   filter,
   counts,
@@ -34,8 +40,20 @@ export function TaskList({
         ))}
       </div>
 
+      {isLoading ? <p role="status">Загрузка задач...</p> : null}
+      {isError ? (
+        <div role="alert">
+          <p>Не удалось загрузить задачи. Проверьте подключение и попробуйте снова.</p>
+          <button type="button" onClick={onRetry}>
+            Повторить загрузку
+          </button>
+        </div>
+      ) : null}
+
       {tasks.length === 0 ? (
-        <p className={styles.empty}>Задач нет — выберите другой фильтр или добавьте новую.</p>
+        !isLoading && !isError ? (
+          <p className={styles.empty}>Задач нет — выберите другой фильтр или добавьте новую.</p>
+        ) : null
       ) : (
         <ul className={styles.list}>
           {tasks.map((task) => (
