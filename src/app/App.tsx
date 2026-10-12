@@ -5,10 +5,22 @@ export function App() {
   return (
     <div className={styles.layout}>
       <header className={styles.header}>
-        <span className={styles.logo}>FSD Tasks</span>
+        <span className={styles.logo}>React PRO</span>
         <nav className={styles.nav}>
           <NavLink className={({ isActive }) => (isActive ? styles.active : undefined)} to="/tasks">
             Задачи
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+            to="/register"
+          >
+            Регистрация
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => (isActive ? styles.active : undefined)}
+            to="/subscribe"
+          >
+            Подписка
           </NavLink>
         </nav>
       </header>
