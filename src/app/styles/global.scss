@@ -28,6 +28,9 @@ button {
   --text: #16181d;
   --text-muted: #6b7280;
   --accent: #4f46e5;
+  --on-accent: #ffffff;
+  --danger: #b42335;
+  --success: #16734a;
 
   color: var(--text);
   background: var(--background);
@@ -44,5 +47,8 @@ button {
     --text: #eceef1;
     --text-muted: #98a1ae;
     --accent: #8b8cf7;
+    --on-accent: #16181d;
+    --danger: #ff929f;
+    --success: #74d9a9;
   }
 }

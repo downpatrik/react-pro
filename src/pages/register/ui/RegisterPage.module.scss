@@ -1,0 +1,12 @@
+.page {
+  display: grid;
+  width: min(40rem, 100%);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  gap: 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+}
