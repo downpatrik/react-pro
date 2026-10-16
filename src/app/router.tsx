@@ -3,6 +3,7 @@ import { App } from "./App";
 import { TasksPage } from "pages/tasks";
 import { RegisterPage } from "pages/register";
 import { SubscribePage } from "pages/subscribe";
+import { RefsPage } from "pages/refs";
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { path: "tasks", element: <TasksPage /> },
       { path: "register", element: <RegisterPage /> },
       { path: "subscribe", element: <SubscribePage /> },
+      { path: "refs", element: <RefsPage /> },
       { path: "*", element: <Navigate to="/tasks" replace /> },
     ],
   },
