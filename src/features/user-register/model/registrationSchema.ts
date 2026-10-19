@@ -9,15 +9,7 @@ export const registrationSchema = z
       .min(1, "Укажите пароль")
       .min(6, "Пароль должен содержать минимум 6 символов"),
     confirmPassword: z.string().min(1, "Подтвердите пароль"),
-    socialLinks: z.array(
-      z.object({
-        url: z
-          .string()
-          .trim()
-          .min(1, "Укажите ссылку или удалите поле")
-          .pipe(z.url("Некорректный URL")),
-      }),
-    ),
+    roles: z.array(z.enum(["USER", "ADMIN"])).min(1, "Выберите хотя бы одну роль"),
   })
   .refine((values) => values.password === values.confirmPassword, {
     message: "Пароли не совпадают",
@@ -32,6 +24,6 @@ export function getRegistrationDefaults(): RegistrationValues {
     email: "",
     password: "",
     confirmPassword: "",
-    socialLinks: [{ url: "" }],
+    roles: ["USER"],
   };
 }
