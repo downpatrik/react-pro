@@ -1,9 +1,9 @@
 import { useId, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, Plus } from "lucide-react";
 import { Button, FormField } from "shared/ui";
-import { registerUser, type RegisteredUser } from "../api/registerUser";
 import {
   getRegistrationDefaults,
   registrationSchema,
@@ -11,12 +11,15 @@ import {
 } from "../model/registrationSchema";
 import styles from "./UserRegistrationForm.module.scss";
 
-export function UserRegistrationForm() {
+interface UserRegistrationFormProps {
+  onRegister: (values: RegistrationValues) => Promise<{ email: string }>;
+}
+
+export function UserRegistrationForm({ onRegister }: UserRegistrationFormProps) {
   const id = useId();
-  const [registeredUser, setRegisteredUser] = useState<RegisteredUser | null>(null);
+  const [registeredUser, setRegisteredUser] = useState<{ email: string } | null>(null);
   const {
     register,
-    control,
     handleSubmit,
     reset,
     setError,
@@ -26,15 +29,18 @@ export function UserRegistrationForm() {
     defaultValues: getRegistrationDefaults(),
     mode: "onTouched",
   });
-  const { fields, append, remove } = useFieldArray({ control, name: "socialLinks" });
-
   async function onSubmit(values: RegistrationValues) {
     try {
-      const user = await registerUser(values);
+      const user = await onRegister(values);
       reset(getRegistrationDefaults());
-      setRegisteredUser(user);
-    } catch {
-      setError("root", { message: "Не удалось отправить форму. Попробуйте ещё раз." });
+      setRegisteredUser({ email: user.email });
+    } catch (error) {
+      setError("root", {
+        message:
+          error instanceof Error
+            ? error.message
+            : "Не удалось зарегистрироваться. Попробуйте ещё раз.",
+      });
     }
   }
 
@@ -44,16 +50,17 @@ export function UserRegistrationForm() {
         <div className={styles.success} role="status">
           <CheckCircle2 size={24} aria-hidden="true" />
           <div>
-            <h2>Данные регистрации приняты</h2>
-            <p>
-              {registeredUser.username}, ваш email: {registeredUser.email}
-            </p>
+            <h2>Аккаунт создан</h2>
+            <p>Ваш email: {registeredUser.email}</p>
           </div>
         </div>
-        <Button variant="secondary" onClick={() => setRegisteredUser(null)}>
-          <Plus aria-hidden="true" />
-          Заполнить снова
-        </Button>
+        <div className={styles.actions}>
+          <Link to="/login">Войти в аккаунт</Link>
+          <Button variant="secondary" onClick={() => setRegisteredUser(null)}>
+            <Plus aria-hidden="true" />
+            Заполнить снова
+          </Button>
+        </div>
       </div>
     );
   }
@@ -61,7 +68,7 @@ export function UserRegistrationForm() {
   return (
     <form
       className={styles.form}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(event) => void handleSubmit(onSubmit)(event)}
       noValidate
       aria-busy={isSubmitting}
     >
@@ -69,7 +76,7 @@ export function UserRegistrationForm() {
         <FormField
           id={`${id}-username`}
           label="Имя пользователя"
-          autoComplete="username"
+          autoComplete="nickname"
           required
           error={errors.username?.message}
           {...register("username")}
@@ -104,34 +111,26 @@ export function UserRegistrationForm() {
             {...register("confirmPassword")}
           />
         </div>
-        <fieldset className={styles.links}>
-          <legend>Социальные ссылки</legend>
-          <div className={styles.linkFields}>
-            {fields.map((field, index) => (
-              <div className={styles.linkRow} key={field.id}>
-                <FormField
-                  id={`${id}-link-${field.id}`}
-                  label={`Ссылка ${index + 1}`}
-                  type="url"
-                  placeholder="https://github.com/username"
-                  error={errors.socialLinks?.[index]?.url?.message}
-                  {...register(`socialLinks.${index}.url`)}
-                />
-                <Button
-                  variant="icon"
-                  aria-label={`Удалить ссылку ${index + 1}`}
-                  title="Удалить ссылку"
-                  onClick={() => remove(index)}
-                >
-                  <Trash2 aria-hidden="true" />
-                </Button>
-              </div>
-            ))}
+        <fieldset
+          className={styles.roles}
+          aria-describedby={errors.roles ? `${id}-roles-error` : undefined}
+        >
+          <legend>Роли</legend>
+          <div className={styles.roleOptions}>
+            <label>
+              <input type="checkbox" value="USER" {...register("roles")} />
+              Пользователь (USER)
+            </label>
+            <label>
+              <input type="checkbox" value="ADMIN" {...register("roles")} />
+              Администратор (ADMIN)
+            </label>
           </div>
-          <Button variant="secondary" onClick={() => append({ url: "" })}>
-            <Plus aria-hidden="true" />
-            Добавить ссылку
-          </Button>
+          {errors.roles?.message ? (
+            <p id={`${id}-roles-error`} className={styles.error} role="alert">
+              {errors.roles.message}
+            </p>
+          ) : null}
         </fieldset>
         {errors.root?.message ? (
           <p className={styles.error} role="alert">
@@ -139,11 +138,12 @@ export function UserRegistrationForm() {
           </p>
         ) : null}
         <div className={styles.actions}>
-          <Button type="submit">
-            {isSubmitting ? "Отправка..." : "Зарегистрироваться"}
-          </Button>
+          <Button type="submit">{isSubmitting ? "Отправка..." : "Зарегистрироваться"}</Button>
           {isSubmitting ? <span role="status">Отправляем данные...</span> : null}
         </div>
+        <p className={styles.loginLink}>
+          Уже есть аккаунт? <Link to="/login">Войти</Link>
+        </p>
       </fieldset>
     </form>
   );
