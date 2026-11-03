@@ -1,0 +1,33 @@
+{
+  "name": "build-hw",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --import tsx build.ts dev",
+    "build": "npm run typecheck && node --import tsx build.ts prod && npm run build:swc",
+    "build:app": "node --import tsx build.ts prod app",
+    "build:lib": "node --import tsx build.ts prod lib",
+    "build:swc": "node --import tsx build-swc.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run build && node --import tsx check.ts"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.21",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.16.21",
+    "@types/lodash": "^4.17.27",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "lodash": "^4.18.1",
+    "react": "^19.3.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

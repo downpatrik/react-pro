@@ -2,6 +2,11 @@
 
 Учебное приложение на React, TypeScript.
 
+Домашнее задание 7 по esbuild и SWC находится в отдельной папке
+[`build-hw`](./build-hw/README.md), включая файлы сборки и проверок.
+Установка: `npm --prefix build-hw ci`,
+затем `npm --prefix build-hw run dev`. Проверка: `npm --prefix build-hw run check`.
+
 ## Запуск
 
 ```bash
