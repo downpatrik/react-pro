@@ -60,6 +60,12 @@ export function App() {
               </NavLink>
               <NavLink
                 className={({ isActive }) => (isActive ? styles.active : undefined)}
+                to="/react19"
+              >
+                Практика React 19
+              </NavLink>
+              <NavLink
+                className={({ isActive }) => (isActive ? styles.active : undefined)}
                 to="/subscribe"
               >
                 Подписка

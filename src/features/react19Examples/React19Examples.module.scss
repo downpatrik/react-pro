@@ -1,0 +1,54 @@
+.form,
+.fields {
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+}
+
+.fields {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.status {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.todos {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0.75rem;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    gap: 1rem;
+    overflow-wrap: anywhere;
+
+    &.pending {
+      border-style: dashed;
+      opacity: 0.7;
+    }
+  }
+
+  small {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+}
+
+.saved {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--success);
+  overflow-wrap: anywhere;
+}
