@@ -1,0 +1,55 @@
+.backdrop {
+  position: fixed;
+  z-index: 1200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.25rem;
+  background: rgb(0 0 0 / 55%);
+  font:
+    400 1rem / 1.5 system-ui,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  letter-spacing: normal;
+  text-align: left;
+  text-transform: none;
+}
+
+.dialog {
+  width: min(28rem, 100%);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 16px 60px rgb(0 0 0 / 30%);
+  overflow-wrap: anywhere;
+
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.3rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.confirm {
+  width: auto;
+  border-color: var(--danger);
+  background: var(--danger);
+  color: var(--surface);
+}

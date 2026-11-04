@@ -7,6 +7,7 @@ import { TasksPage } from "pages/tasks";
 import { RegisterPage } from "pages/register";
 import { SubscribePage } from "pages/subscribe";
 import { RefsPage } from "pages/refs";
+import { PortalShowcase } from "pages/portal-showcase";
 import { App } from "./App";
 
 export function AppRouter() {
@@ -18,6 +19,7 @@ export function AppRouter() {
         <Route path="register" element={<RegisterPage />} />
         <Route path="subscribe" element={<SubscribePage />} />
         <Route path="refs" element={<RefsPage />} />
+        <Route path="portal-showcase" element={<PortalShowcase />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="public" element={<PublicPage />} />
         <Route element={<ProtectedRoute />}>

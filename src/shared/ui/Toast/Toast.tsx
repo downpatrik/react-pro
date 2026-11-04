@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Info, TriangleAlert, X } from "lucide-react";
+import { themeStyles, useTheme } from "../Theme";
 import { ToastContext, type Notify, type ToastVariant } from "./toastContext";
 import styles from "./Toast.module.scss";
 
@@ -10,6 +12,7 @@ interface ToastMessage {
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const theme = useTheme();
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const timeoutsRef = useRef(new Map<number, ReturnType<typeof setTimeout>>());
   const nextIdRef = useRef(0);
@@ -56,34 +59,38 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={notify}>
       {children}
-      <div
-        className={styles.viewport}
-        ref={viewportRef}
-        data-active={toasts.length > 0}
-        aria-live="polite"
-        aria-relevant="additions"
-      >
-        <div className={styles.stack}>
-          {toasts.map((toast) => (
-            <button
-              className={[styles.toast, toast.variant === "error" ? styles.error : ""].join(" ")}
-              key={toast.id}
-              type="button"
-              onClick={() => dismiss(toast.id)}
-              aria-label={`Закрыть уведомление: ${toast.message}`}
-              title="Нажмите, чтобы закрыть"
-            >
-              {toast.variant === "error" ? (
-                <TriangleAlert className={styles.icon} aria-hidden="true" />
-              ) : (
-                <Info className={styles.icon} aria-hidden="true" />
-              )}
-              <span className={styles.message}>{toast.message}</span>
-              <X className={styles.close} size={18} aria-hidden="true" />
-            </button>
-          ))}
-        </div>
-      </div>
+      {createPortal(
+        <div
+          className={`${styles.viewport} ${themeStyles[theme]}`}
+          data-theme={theme}
+          ref={viewportRef}
+          data-active={toasts.length > 0}
+          aria-live="polite"
+          aria-relevant="additions"
+        >
+          <div className={styles.stack}>
+            {toasts.map((toast) => (
+              <button
+                className={[styles.toast, toast.variant === "error" ? styles.error : ""].join(" ")}
+                key={toast.id}
+                type="button"
+                onClick={() => dismiss(toast.id)}
+                aria-label={`Закрыть уведомление: ${toast.message}`}
+                title="Нажмите, чтобы закрыть"
+              >
+                {toast.variant === "error" ? (
+                  <TriangleAlert className={styles.icon} aria-hidden="true" />
+                ) : (
+                  <Info className={styles.icon} aria-hidden="true" />
+                )}
+                <span className={styles.message}>{toast.message}</span>
+                <X className={styles.close} size={18} aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+        </div>,
+        document.getElementById("toast-root") ?? document.body,
+      )}
     </ToastContext.Provider>
   );
 }
