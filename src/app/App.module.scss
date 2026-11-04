@@ -5,13 +5,20 @@
 }
 
 .header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  flex-wrap: wrap;
   gap: 1.5rem;
   padding: 0.85rem 1.25rem;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+}
+
+.themeToggle {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  white-space: nowrap;
 }
 
 .logo {
@@ -36,5 +43,23 @@
 }
 
 .main {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+}
+
+@media (max-width: 1100px) {
+  .header {
+    grid-template-columns: 1fr auto;
+    gap: 0.85rem;
+  }
+
+  .nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .themeToggle {
+    grid-column: 2;
+  }
 }

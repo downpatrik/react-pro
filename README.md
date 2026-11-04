@@ -17,6 +17,7 @@ npm run lint
 - `/register` - регистрация через учебный API на RHF с Zod и выбором ролей.
 - `/subscribe` - двухшаговая подписка на `useActionState`.
 - `/refs` - пять примеров `useRef`: клики, предыдущий ввод, фокус, debounce и WebSocket.
+- `/portal-showcase` - страница с примерами: Tooltip, ConfirmDialog,
 - `/login` - вход по email и паролю через учебный API.
 - `/profile` - защищённый профиль с восстановлением сессии и кнопкой выхода.
 - `/public` - открытая страница, доступная без авторизации.

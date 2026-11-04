@@ -22,33 +22,9 @@ button {
 }
 
 :root {
-  --surface: #ffffff;
-  --background: #f6f7f9;
-  --border: #e2e5ea;
-  --text: #16181d;
-  --text-muted: #6b7280;
-  --accent: #4f46e5;
-  --on-accent: #ffffff;
-  --danger: #b42335;
-  --success: #16734a;
-
   color: var(--text);
   background: var(--background);
   font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --surface: #16181d;
-    --background: #0f1115;
-    --border: #2a2f38;
-    --text: #eceef1;
-    --text-muted: #98a1ae;
-    --accent: #8b8cf7;
-    --on-accent: #16181d;
-    --danger: #ff929f;
-    --success: #74d9a9;
-  }
 }
