@@ -1,0 +1,29 @@
+.trigger {
+  display: inline-flex;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 1100;
+  width: max-content;
+  max-width: min(19rem, calc(100vw - 1rem));
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 20%);
+  font:
+    400 0.875rem / 1.5 system-ui,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  letter-spacing: normal;
+  text-align: left;
+  text-transform: none;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  pointer-events: none;
+}
