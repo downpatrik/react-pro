@@ -1,0 +1,39 @@
+{
+  "name": "build-hw",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "npm run esbuild -- dev",
+    "esbuild": "node --import tsx configs/esbuild.config.ts",
+    "build": "npm run typecheck && npm run esbuild -- prod && npm run build:swc",
+    "build:app": "npm run esbuild -- prod app",
+    "build:lib": "npm run esbuild -- prod lib",
+    "prebuild:swc": "rm -rf dist/swc",
+    "build:swc": "npm run swc:esm && npm run swc:cjs",
+    "swc:esm": "swc lib -d dist/swc/esm --config-file configs/swc.esm.json --strip-leading-paths",
+    "swc:cjs": "swc lib -d dist/swc/cjs --config-file configs/swc.cjs.json --strip-leading-paths",
+    "postswc:cjs": "echo '{\"type\":\"commonjs\"}' > dist/swc/cjs/package.json",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run build"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.21",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.8.2",
+    "@swc/core": "^1.16.21",
+    "@types/lodash": "^4.17.27",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "esbuild": "^0.28.2",
+    "lodash": "^4.18.1",
+    "react": "^19.3.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
