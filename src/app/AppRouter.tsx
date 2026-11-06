@@ -8,6 +8,7 @@ import { RegisterPage } from "pages/register";
 import { SubscribePage } from "pages/subscribe";
 import { RefsPage } from "pages/refs";
 import { PortalShowcase } from "pages/portal-showcase";
+import { React19Page } from "pages/react19";
 import { App } from "./App";
 
 export function AppRouter() {
@@ -20,6 +21,7 @@ export function AppRouter() {
         <Route path="subscribe" element={<SubscribePage />} />
         <Route path="refs" element={<RefsPage />} />
         <Route path="portal-showcase" element={<PortalShowcase />} />
+        <Route path="react19" element={<React19Page />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="public" element={<PublicPage />} />
         <Route element={<ProtectedRoute />}>

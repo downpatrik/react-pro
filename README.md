@@ -23,6 +23,7 @@ npm run lint
 - `/subscribe` - двухшаговая подписка на `useActionState`.
 - `/refs` - пять примеров `useRef`: клики, предыдущий ввод, фокус, debounce и WebSocket.
 - `/portal-showcase` - страница с примерами: Tooltip, ConfirmDialog,
+- `/react19` - открытая страница с тремя примерами по React19.
 - `/login` - вход по email и паролю через учебный API.
 - `/profile` - защищённый профиль с восстановлением сессии и кнопкой выхода.
 - `/public` - открытая страница, доступная без авторизации.
