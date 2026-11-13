@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 import { userSlice } from '../slices/user';
-import { cartSlice } from '../slices/cart';
+import { cartSlice } from '../../../features/cart/cartSlice';
 import { productsSlice } from '../slices/products';
-import { authApi } from '../api/authApi';
-import { productsApi } from '../api/productsApi';
+import { authApi } from '../../../features/auth/api/authApi';
+import { productsApi } from '../../../features/products/api/productsApi';
 
 export const rootReducer = combineReducers({
 	[userSlice.name]: userSlice.reducer,

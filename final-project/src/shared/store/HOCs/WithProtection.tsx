@@ -22,7 +22,7 @@ export const WithProtection = <P extends object>(
 					// страницу хотел посетить пользователь. И если он в дальнейшем
 					// войдет в систему, то мы его автоматически перебросим на желаемую страницу
 					state={{
-						from: location.pathname,
+						from: location.pathname + location.search,
 					}}
 				/>
 			);

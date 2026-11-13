@@ -1,21 +1,34 @@
-import { ReactComponent as Star } from '../../../assets/icons/star.svg';
+import Star from '../../../assets/icons/star.svg?react';
+import { Button } from '../../Button';
 
-type TRating = {
+type RatingProps = {
 	rating?: number;
 	isEdit?: boolean;
 	onChange?: (rating: number) => void;
 };
-export const Rating = ({ rating = 0, isEdit = false, onChange }: TRating) => {
-	return (
-		<div>
-			{[...Array(5)].map((_e, i) => (
-				<span key={i} style={{ cursor: isEdit ? 'pointer' : 'default' }}>
-					<Star
-						onClick={() => onChange?.(i)}
-						fill={i <= rating ? 'gold' : 'gray'}
-					/>
-				</span>
-			))}
-		</div>
-	);
-};
+
+export const Rating = ({
+	rating = 0,
+	isEdit = false,
+	onChange,
+}: RatingProps) => (
+	<div aria-label={isEdit ? 'Выбор оценки' : `Оценка ${rating} из 5`}>
+		{[1, 2, 3, 4, 5].map((value) => {
+			const star = (
+				<Star aria-hidden='true' fill={value <= rating ? 'gold' : 'gray'} />
+			);
+			return isEdit ? (
+				<Button
+					key={value}
+					aria-label={`Оценка ${value} из 5`}
+					aria-pressed={value === rating}
+					style={{ background: 'none', border: 0, cursor: 'pointer' }}
+					onClick={() => onChange?.(value)}>
+					{star}
+				</Button>
+			) : (
+				<span key={value}>{star}</span>
+			);
+		})}
+	</div>
+);

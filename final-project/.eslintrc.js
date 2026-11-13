@@ -23,6 +23,12 @@ module.exports = {
 		'plugin:eslint-comments/recommended',
 	],
 	rules: {
+		'jsx-a11y/label-has-associated-control': [
+			'error',
+			{ controlComponents: ['Input'] },
+		],
+
+		'import/no-unresolved': ['error', { ignore: ['\\.svg\\?react$'] }],
 		semi: [2, 'always'],
 		quotes: [2, 'single', { avoidEscape: true }],
 		'no-unused-vars': 'off',

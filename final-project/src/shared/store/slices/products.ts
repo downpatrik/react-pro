@@ -21,10 +21,12 @@ export const productsSlice = createSlice({
 		setSort: (state, action: PayloadAction<Sort>) => ({
 			...state,
 			sort: action.payload,
+			page: 1,
 		}),
 		setSearchText: (state, action: PayloadAction<string>) => ({
 			...state,
 			searchText: action.payload,
+			page: 1,
 		}),
 		setPage: (state, action: PayloadAction<number>) => ({
 			...state,

@@ -1,44 +1,52 @@
 import s from './ProductPage.module.css';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { Spinner } from '../../../shared/ui/Spinner';
+import { userSelectors } from '../../../shared/store/slices/user';
 import classNames from 'classnames';
 import truckSVG from '../../../shared/assets/icons/truck.svg';
 import qualitySVG from '../../../shared/assets/icons/quality.svg';
 import { Rating } from '../../../shared/ui/Rating';
 import { ButtonBack } from '../../../shared/ui/ButtonBack';
-import { LikeButton } from '../../../shared/ui/LikeButton';
-import { ReviewList } from '../../../widgets/ReviewList/ui/ReviewList';
+import { LikeButton } from '../../../features/products/LikeButton';
+import { ReviewList } from '../../../features/products/ReviewList/ui/ReviewList';
 import { WithProtection } from '../../../shared/store/HOCs/WithProtection';
-import { useGetProductQuery } from '../../../shared/store/api/productsApi';
-import { ProductCartCounter } from '../../../shared/ui/ProductCartCounter/ui/ProductCartCounter';
+import { useGetProductQuery } from '../../../features/products/api/productsApi';
+import { ProductCartCounter } from '../../../features/cart/ProductCartCounter/ui/ProductCartCounter';
 import { useAppSelector } from '../../../shared/store/utils';
-import { cartSelectors } from '../../../shared/store/slices/cart';
-import { CartCounter } from '../../../shared/ui/CartCounter';
+import { cartSelectors } from '../../../features/cart/cartSlice';
+import { CartCounter } from '../../../features/cart/CartCounter';
 
 export const ProductPage = WithProtection(() => {
-	const location = useLocation();
-	const { pathname } = location;
-	const productId = pathname.split('/').at(-1) || '';
+	const { productId = '' } = useParams();
+	const {
+		data: product,
+		isLoading,
+		isError,
+	} = useGetProductQuery({ id: productId });
+	const currentUser = useAppSelector(userSelectors.getUser);
+	const isProductInCart = useAppSelector((state) =>
+		cartSelectors.getCartProducts(state).some((item) => item.id === productId)
+	);
 
-	const cartProducts = useAppSelector(cartSelectors.getCartProducts);
+	if (isLoading) return <Spinner />;
+	if (isError || !product) return <p role='alert'>Не удалось открыть товар.</p>;
 
-	const { data: product } = useGetProductQuery({ id: productId });
-
-	if (!product) {
-		return <></>;
-	}
-
-	const { id, name, images, description, price, discount } = product;
-
-	const isProductInCart = !!cartProducts.find((p) => p.id === id);
+	const { id, name, images, description, price, discount, reviews } = product;
+	const average = reviews.length
+		? Math.round(
+				reviews.reduce((total, review) => total + review.rating, 0) /
+					reviews.length
+		  )
+		: 0;
 
 	return (
 		<>
 			<ButtonBack />
 			<h1 className={classNames(s['header-title'])}>{name}</h1>
-			<p className='acticul'>
-				Артикул: <b>2388907</b>
-			</p>
-			<Rating rating={3} />
+			{product.user?.id === currentUser?.id && currentUser?.id && (
+				<p>Ваш товар</p>
+			)}
+			<Rating rating={average} />
 			<div className={classNames(s['product'])}>
 				<div className={classNames(s['product__img-wrapper'])}>
 					<img src={images} alt={description} />
@@ -95,35 +103,7 @@ export const ProductPage = WithProtection(() => {
 			</div>
 			<div className={classNames(s['product__box'])}>
 				<h2 className={classNames(s['product__title'])}>Описание</h2>
-				<p className={classNames(s['product__subtitle'])}>Описание demo</p>
-				<h2 className={classNames(s['product__title'])}>Характеристики</h2>
-				<div className={classNames(s['product__grid'])}>
-					<div className={classNames(s['product__naming'])}>Вес</div>
-					<div className={classNames(s['product__description'])}>
-						1 шт 120-200 грамм
-					</div>
-					<div className={classNames(s['product__naming'])}>Цена</div>
-					<div className={classNames(s['product__description'])}>
-						490 ₽ за 100 грамм
-					</div>
-					<div className={classNames(s['product__naming'])}>Польза</div>
-					<div className={classNames(s['product__description'])}>
-						<p>
-							Большое содержание аминокислот и микроэлементов оказывает
-							положительное воздействие на общий обмен веществ собаки.
-						</p>
-						<p>Способствуют укреплению десен и жевательных мышц.</p>
-						<p>
-							Развивают зубочелюстной аппарат, отвлекают собаку во время смены
-							зубов.
-						</p>
-						<p>
-							Имеет цельную волокнистую структуру, при разжевывание получается
-							эффект зубной щетки, лучше всего очищает клыки собак.
-						</p>
-						<p>Следует учесть высокую калорийность продукта.</p>
-					</div>
-				</div>
+				<p className={s['product__subtitle']}>{description}</p>
 			</div>
 			<ReviewList product={product} />
 		</>

@@ -1,11 +1,5 @@
-import {
-	Alert,
-	AlertTitle,
-	Box,
-	Button,
-	CircularProgress,
-	Container,
-} from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Container } from '@mui/material';
+import { Spinner } from '../../ui/Spinner';
 import { FC, ComponentType } from 'react';
 import { getMessageFromError } from '../../utils';
 import { SerializedError } from '@reduxjs/toolkit';
@@ -29,7 +23,7 @@ export const WithQuery = <T extends object>(
 			return (
 				<Container>
 					<Alert
-						action={<Button onClick={refetch}>Retry</Button>}
+						action={<Button onClick={refetch}>Повторить</Button>}
 						severity='error'>
 						<AlertTitle>
 							{getMessageFromError(
@@ -45,7 +39,7 @@ export const WithQuery = <T extends object>(
 		if (isLoading) {
 			return (
 				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-					<CircularProgress />
+					<Spinner />
 				</Box>
 			);
 		}

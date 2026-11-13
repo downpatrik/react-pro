@@ -4,6 +4,5 @@ public
 storybook-static
 build
 dist
-webpack/*.js
 package*.json
 custom.d.ts

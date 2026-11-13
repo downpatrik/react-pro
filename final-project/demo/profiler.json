@@ -1,0 +1,24 @@
+{
+  "scenario": "Добавление одного товара в пустую корзину",
+  "tool": "React DevTools Profiler 8.0.0",
+  "baseline": {
+    "count": 6,
+    "commits": [
+      {
+        "duration": 3.8,
+        "cards": 6
+      }
+    ],
+    "renders": 6
+  },
+  "optimized": {
+    "count": 6,
+    "commits": [
+      {
+        "duration": 1.9,
+        "cards": 1
+      }
+    ],
+    "renders": 1
+  }
+}

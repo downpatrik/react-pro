@@ -49,7 +49,7 @@ declare global {
 	};
 
 	type Like = BaseLike & {
-		user: LikeUser;
+		user?: LikeUser;
 	};
 
 	type ReviewUserLike = BaseLike & {

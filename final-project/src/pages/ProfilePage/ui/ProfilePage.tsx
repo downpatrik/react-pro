@@ -1,93 +1,119 @@
-import s from './ProfilePage.module.css';
-import classNames from 'classnames';
+import { FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
+import {
+	useGetProfileQuery,
+	useUpdateProfileMutation,
+} from '../../../features/auth/api/authApi';
+import { Button } from '../../../shared/ui/Button';
 import { ButtonBack } from '../../../shared/ui/ButtonBack';
+import { Input } from '../../../shared/ui/Input';
+import { Spinner } from '../../../shared/ui/Spinner';
 import { WithProtection } from '../../../shared/store/HOCs/WithProtection';
+import styles from './ProfilePage.module.css';
 
-export const ProfilePage = WithProtection(() => {
+export const ProfilePage = WithProtection(function ProfilePage() {
+	const { data: profile, isLoading, refetch } = useGetProfileQuery();
+	const [updateProfile, { isLoading: saving }] = useUpdateProfileMutation();
+	const [error, setError] = useState('');
+
+	async function save(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		const form = event.currentTarget;
+		const fields = new FormData(form);
+		const password = fields.get('password');
+		const body = password
+			? { password: String(password) }
+			: {
+					name: String(fields.get('name')).trim(),
+					email: String(fields.get('email')).trim(),
+					about: String(fields.get('about')).trim(),
+					avatarPath: String(fields.get('avatarPath')).trim(),
+			  };
+		setError('');
+		try {
+			await updateProfile(body).unwrap();
+			if (password) form.reset();
+			toast.success('Данные профиля сохранены');
+		} catch {
+			setError('Не удалось сохранить данные профиля.');
+		}
+	}
+
+	if (isLoading) return <Spinner />;
+	if (!profile)
+		return (
+			<>
+				<p role='alert'>Не удалось загрузить профиль</p>
+				<Button onClick={refetch}>Повторить</Button>
+			</>
+		);
+
 	return (
-		<>
+		<section className='container'>
 			<ButtonBack />
-			<h1 className={s['form__title']}>Мои данные</h1>
-			<form className={classNames(s['form'], s['form'])}>
-				<div className={s['form__row']}>
-					<label className={s['form__label']} htmlFor='name'>
-						{''}
-						<input
-							className={s['input']}
+			<h1 className={styles.form__title}>Мои данные</h1>
+			<form className={styles.form} onSubmit={save}>
+				<div className={styles.form__row}>
+					<label className={styles.form__label}>
+						Имя
+						<Input
+							className={styles.input}
 							name='name'
-							id='name'
-							type='text'
-							placeholder='Введите ваше имя'
+							defaultValue={profile.name}
+							required
 						/>
 					</label>
-					<label className={s['form__label']}>
-						{''}
-						<input
-							className={s['input']}
+					<label className={styles.form__label}>
+						О себе
+						<Input
+							className={styles.input}
 							name='about'
-							id='about'
-							type='text'
-							placeholder='Описание профессии'
+							defaultValue={profile.about}
 						/>
 					</label>
 				</div>
-				<div className={s['form__row']}>
-					<label className={s['form__label']}>
-						{''}
-						<input
-							className={s['input']}
-							name='avatar'
-							id='avatar'
+				<div className={styles.form__row}>
+					<label className={styles.form__label}>
+						Ссылка на аватар
+						<Input
+							className={styles.input}
+							name='avatarPath'
 							type='url'
-							placeholder='Введите ссылку на аватарку'
+							defaultValue={profile.avatarPath}
 						/>
 					</label>
-					<label className={s['form__label']}>
-						{''}
-						<input
-							className={s['input']}
+					<label className={styles.form__label}>
+						Email
+						<Input
+							className={styles.input}
 							name='email'
-							id='email'
-							type='text'
-							placeholder='email'
+							type='email'
+							defaultValue={profile.email}
+							required
 						/>
 					</label>
 				</div>
-
-				<button
-					type='submit'
-					className={classNames(
-						s['form__btn'],
-						s['secondary'],
-						s['maxContent']
-					)}>
-					Сохранить
-				</button>
+				<Button type='submit' className={styles.form__btn} disabled={saving}>
+					Сохранить профиль
+				</Button>
 			</form>
-			<h2 className={s['form__title']}>Изменить пароль</h2>
-			<form className={classNames(s['form'], s['form'])}>
-				<div className={classNames(s['form__row'], s['form__row_min'])}>
-					<label className={s['form__label']}>
-						{''}
-						<input
-							className={s['input']}
-							name='password'
-							id='password'
-							type='password'
-							placeholder='Пароль'
-						/>
-					</label>
-				</div>
-				<button
-					type='submit'
-					className={classNames(
-						s['form__btn'],
-						s['secondary'],
-						s['maxContent']
-					)}>
-					Сохранить
-				</button>
+			<h2 className={styles.form__title}>Изменить пароль</h2>
+			<form className={styles.form} onSubmit={save}>
+				<label>
+					Новый пароль
+					<Input
+						className={styles.input}
+						name='password'
+						type='password'
+						minLength={6}
+						required
+					/>
+				</label>
+				<Button type='submit' className={styles.form__btn} disabled={saving}>
+					Сохранить пароль
+				</Button>
 			</form>
-		</>
+			{error && <p role='alert'>{error}</p>}
+		</section>
 	);
 });
